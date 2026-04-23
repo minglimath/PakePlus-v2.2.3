@@ -1,0 +1,73 @@
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="upperCurve" d="M 75,250 A 175,175 0 1,1 425,250" />
+    <path id="lowerCurve" d="M 75,250 A 175,175 0 0,0 425,250" />
+    
+    <clipPath id="circleClip">
+      <circle cx="250" cy="250" r="130" />
+    </clipPath>
+
+    <filter id="white-halo" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="dilated"/>
+      <feFlood flood-color="#FFFFFF" result="whiteColor"/>
+      <feComposite in="whiteColor" in2="dilated" operator="in" result="halo"/>
+      <feMerge>
+        <feMergeNode in="halo"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    /* 全局透明度控制：0.25 - 0.35 之间效果最好 */
+    .phantom-group {
+      opacity: 0.35; 
+    }
+
+    /* 🖋️ 针对文字：黑芯白边 */
+    .ink-text {
+      font-family: Arial, Helvetica, sans-serif;
+      fill: #000000;           /* 核心：黑 */
+      stroke: #FFFFFF;         /* 保护：白 */
+      stroke-width: 5px;       /* 描边更粗以适应500px画布 */
+      stroke-linejoin: round;
+      paint-order: stroke fill; /* 关键：白边垫底 */
+    }
+
+    /* ⭕ 针对线条/圆圈：黑色线条 + 滤镜生成白边 */
+    .ink-stroke {
+      fill: none;
+      stroke: #000000;
+      filter: url(#white-halo); /* 应用光晕滤镜 */
+    }
+
+    /* 🖼️ 针对图片：应用光晕滤镜 */
+    .ink-image {
+      filter: url(#white-halo);
+    }
+  </style>
+
+  <g class="phantom-group">
+    <circle cx="250" cy="250" r="230" class="ink-stroke" stroke-width="4" />
+    <circle cx="250" cy="250" r="215" class="ink-stroke" stroke-width="2" />
+    <circle cx="250" cy="250" r="135" class="ink-stroke" stroke-width="2" />
+    <line x1="55" y1="250" x2="95" y2="250" class="ink-stroke" stroke-width="3" stroke-linecap="round" />
+    <line x1="405" y1="250" x2="445" y2="250" class="ink-stroke" stroke-width="3" stroke-linecap="round" />
+
+    <g>
+      <text font-size="64" font-weight="bold" letter-spacing="2" class="ink-text">
+        <textPath href="#upperCurve" startOffset="50%" text-anchor="middle" dominant-baseline="middle">ThinkSnap</textPath>
+      </text>
+      <text font-size="26" font-weight="bold" letter-spacing="1.5" class="ink-text">
+        <textPath href="#lowerCurve" startOffset="50%" text-anchor="middle" dominant-baseline="middle">Distill Thoughts • Clarify Knowledge</textPath>
+      </text>
+    </g>
+
+    <image 
+      x="-12" y="1" width="500" height="500" 
+      href="{{LOGO_BASE64}}" 
+      clip-path="url(#circleClip)" 
+      class="ink-image" 
+    />
+  </g>
+</svg>
